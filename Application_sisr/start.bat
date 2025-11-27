@@ -79,7 +79,7 @@ if exist "node_modules\" (
     echo     [INFO] Dossier node_modules present.
 ) else (
     echo     [WARN] Dependances manquantes.
-    echo     [INFO] Installation automatique (npm install)...
+    echo     [INFO] Installation automatique - npm install...
     echo [DEBUG] Lancement de npm install...
     call npm install
     if !errorlevel! neq 0 (
@@ -88,18 +88,22 @@ if exist "node_modules\" (
     )
     echo     [OK] Dependances installees.
 )
+echo [DEBUG] Fin du bloc dependances.
 pause
 
 REM 5. Start Application
 echo.
+echo [DEBUG] Debut Etape 3...
 echo [3/4] Preparation du lancement...
+echo [DEBUG] Etape 3 passee.
 echo.
 echo [4/4] Lancement de l'application...
-echo.
+echo [DEBUG] Avant npm start...
 
 REM Use npm start to launch
-echo [DEBUG] Lancement de npm start...
+echo [DEBUG] Execution de: call npm start
 call npm start
+echo [DEBUG] Retour de npm start. Code: %errorlevel%
 
 if %errorlevel% neq 0 (
     echo.
@@ -107,6 +111,7 @@ if %errorlevel% neq 0 (
     goto :error
 )
 
+echo [DEBUG] Fin normale.
 goto :end
 
 :error
