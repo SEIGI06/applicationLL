@@ -88,7 +88,14 @@ call npm start
 
 if %errorlevel% neq 0 (
     echo.
-    echo [ERREUR] L'application s'est arretee avec une erreur.
-    pause
+    echo [ERREUR] L'application s'est arretee avec une erreur (Code: %errorlevel%).
+    echo.
+    echo Verifiez les logs ci-dessus.
 )
+
+echo.
+echo ========================================
+echo   Fin de l'execution.
+echo ========================================
+pause
 
