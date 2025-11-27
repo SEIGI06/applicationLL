@@ -62,7 +62,13 @@ app.on('activate', () => {
 // Charger les serveurs depuis JSON
 ipcMain.handle('load-servers', async () => {
     try {
-        const data = await fs.readFile(JSON_FILE, 'utf8');
+        let data = await fs.readFile(JSON_FILE, 'utf8');
+
+        // Supprimer le BOM (Byte Order Mark) si présent
+        if (data.charCodeAt(0) === 0xFEFF) {
+            data = data.slice(1);
+        }
+
         return JSON.parse(data);
     } catch (error) {
         console.error('Erreur chargement servers.json:', error);
