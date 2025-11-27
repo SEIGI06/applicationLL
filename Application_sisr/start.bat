@@ -1,4 +1,8 @@
 @echo off
+REM Debug: Pause at start to verify script runs
+echo [DEBUG] Script demarre...
+pause
+
 setlocal EnableDelayedExpansion
 
 REM ========================================
@@ -45,9 +49,8 @@ if not exist "%LOCAL_BIN%" mkdir "%LOCAL_BIN%"
 
 powershell -Command "Invoke-WebRequest -Uri '%NODE_URL%' -OutFile '%LOCAL_BIN%\node.zip'"
 if %errorlevel% neq 0 (
-    echo     [ERREUR] Echec du telechargement. Verifiez votre connexion.
-    pause
-    exit /b 1
+    echo     [ERREUR] Echec du telechargement.
+    goto :error
 )
 
 echo     [INFO] Extraction des fichiers...
@@ -56,25 +59,33 @@ del "%LOCAL_BIN%\node.zip"
 
 set "PATH=%LOCAL_NODE%;%PATH%"
 echo     [OK] Node.js portable installe et configure.
+pause
 
 :check_deps
 REM 4. Check and Install Dependencies
 echo.
 echo [2/4] Verification des dependances...
+echo [DEBUG] Verification des versions...
+node --version
+if %errorlevel% neq 0 echo [ERREUR] Node non detecte!
+npm --version
+if %errorlevel% neq 0 echo [ERREUR] NPM non detecte!
+pause
 
 if exist "node_modules\" (
     echo     [INFO] Dossier node_modules present.
 ) else (
     echo     [WARN] Dependances manquantes.
     echo     [INFO] Installation automatique (npm install)...
+    echo [DEBUG] Lancement de npm install...
     call npm install
     if !errorlevel! neq 0 (
         echo     [ERREUR] L'installation des dependances a echoue.
-        pause
-        exit /b 1
+        goto :error
     )
     echo     [OK] Dependances installees.
 )
+pause
 
 REM 5. Start Application
 echo.
@@ -84,15 +95,27 @@ echo [4/4] Lancement de l'application...
 echo.
 
 REM Use npm start to launch
+echo [DEBUG] Lancement de npm start...
 call npm start
 
 if %errorlevel% neq 0 (
     echo.
     echo [ERREUR] L'application s'est arretee avec une erreur (Code: %errorlevel%).
-    echo.
-    echo Verifiez les logs ci-dessus.
+    goto :error
 )
 
+goto :end
+
+:error
+echo.
+echo ========================================
+echo   UNE ERREUR EST SURVENUE
+echo ========================================
+echo.
+pause
+exit /b 1
+
+:end
 echo.
 echo ========================================
 echo   Fin de l'execution.
