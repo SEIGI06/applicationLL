@@ -66,9 +66,12 @@ REM 4. Check and Install Dependencies
 echo.
 echo [2/4] Verification des dependances...
 echo [DEBUG] Verification des versions...
+echo   - Node:
 node --version
 if %errorlevel% neq 0 echo [ERREUR] Node non detecte!
-npm --version
+
+echo   - NPM:
+call npm --version
 if %errorlevel% neq 0 echo [ERREUR] NPM non detecte!
 pause
 
