@@ -8,6 +8,16 @@
     "build": "electron-builder",
     "build:win": "electron-builder --win"
   },
+  "build": {
+    "appId": "com.gsb.infrastructure",
+    "win": {
+      "target": "portable",
+      "icon": "assets/icon.ico"
+    },
+    "portable": {
+      "artifactName": "GSB_Manager_Portable.exe"
+    }
+  },
   "keywords": [
     "infrastructure",
     "server",
