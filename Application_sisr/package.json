@@ -1,4 +1,3 @@
-```json
 {
   "name": "gsb-infrastructure-manager",
   "version": "2.3.0",
@@ -42,4 +41,3 @@
     "electron-builder": "^24.9.1"
   }
 }
-```
