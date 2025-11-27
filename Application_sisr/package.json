@@ -1,3 +1,4 @@
+```json
 {
   "name": "gsb-infrastructure-manager",
   "version": "2.3.0",
@@ -11,8 +12,18 @@
   "build": {
     "appId": "com.gsb.infrastructure",
     "win": {
-      "target": "portable",
+      "target": [
+        "nsis",
+        "portable"
+      ],
       "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "GSB Manager"
     },
     "portable": {
       "artifactName": "GSB_Manager_Portable.exe"
@@ -31,3 +42,4 @@
     "electron-builder": "^24.9.1"
   }
 }
+```
