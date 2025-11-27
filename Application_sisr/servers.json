@@ -1,0 +1,101 @@
+﻿[
+    {
+        "ID": 1,
+        "Name": "SRV-DP-web1",
+        "IP": "10.0.0.1",
+        "User": "etudiant",
+        "Zone": "DMZ",
+        "OS": "Linux",
+        "Color": "White"
+    },
+    {
+        "ID": 2,
+        "Name": "SRV-DP-web2",
+        "IP": "10.0.0.2",
+        "User": "etudiant",
+        "Zone": "DMZ",
+        "OS": "Linux",
+        "Color": "White"
+    },
+    {
+        "ID": 3,
+        "Name": "SRV-DP-BDD1",
+        "IP": "172.20.150.5",
+        "User": "etudiant",
+        "Zone": "DMZ_intern",
+        "OS": "Linux",
+        "Color": "White"
+    },
+    {
+        "ID": 4,
+        "Name": "SRV-DP-BDD2",
+        "IP": "172.20.150.6",
+        "User": "etudiant",
+        "Zone": "DMZ_intern",
+        "OS": "Linux",
+        "Color": "White"
+    },
+    {
+        "ID": 5,
+        "Name": "SRV-DP-AD",
+        "IP": "172.20.100.1",
+        "User": "administrateur",
+        "Zone": "Vlan100",
+        "OS": "Windows",
+        "Color": "White"
+    },
+    {
+        "ID": 7,
+        "Name": "SRV-DP-GLPI",
+        "IP": "172.20.100.3",
+        "User": "etudiant",
+        "Zone": "Vlan100",
+        "OS": "Linux",
+        "Color": "White"
+    },
+    {
+        "ID": 8,
+        "Name": "SRV-DP-IPAM",
+        "IP": "172.20.100.4",
+        "User": "etudiant",
+        "Zone": "Vlan100",
+        "OS": "Linux",
+        "Color": "White"
+    },
+    {
+        "ID": 9,
+        "Name": "PC-DP-ADMIN_Vlan10",
+        "IP": "172.20.10.20",
+        "User": "Adminvlan10",
+        "Zone": "Vlan10",
+        "OS": "Windows",
+        "Color": "White"
+    },
+    {
+        "ID": 10,
+        "Name": "PC-DP-DIRECTION_Vlan20",
+        "IP": "172.20.20.20",
+        "User": "Directionvlan20",
+        "Zone": "Vlan20",
+        "OS": "Windows",
+        "Color": "White"
+    },
+    {
+        "ID": 11,
+        "Name": "PC-DP-ADMIN_Vlan30",
+        "IP": "172.20.30.20",
+        "User": "Commercialvlan30",
+        "Zone": "Vlan30",
+        "OS": "Windows",
+        "Color": "White"
+    },
+    {
+        "ID": 12,
+        "Name": "PC-ADMIN-DMZ",
+        "IP": "10.0.0.40",
+        "User": "administrateur",
+        "Zone": "DMZ",
+        "OS": "Windows",
+        "Color": "White"
+    }
+]

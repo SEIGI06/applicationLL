@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSB Infrastructure Manager v2.3</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Hero Section avec Gradient Animé -->
+    <header class="hero">
+        <div class="hero-content">
+            <div class="hero-title">
+                <h1>✨ GSB INFRASTRUCTURE</h1>
+                <p class="subtitle">MANAGER v2.3 PREMIUM</p>
+            </div>
+            <div class="hero-badge">
+                <span class="user-badge">👤 Admin</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Toolbar Actions -->
+    <nav class="toolbar">
+        <button id="btn-add" class="btn btn-primary">
+            ➕ <span>Ajouter</span>
+        </button>
+        <button id="btn-edit" class="btn btn-secondary">
+            ✏️ <span>Modifier</span>
+        </button>
+        <button id="btn-delete" class="btn btn-danger">
+            🗑️ <span>Supprimer</span>
+        </button>
+        <div class="toolbar-divider"></div>
+        <button id="btn-scan" class="btn btn-accent">
+            🔍 <span>Scanner Réseau</span>
+        </button>
+        <button id="btn-connect" class="btn btn-success">
+            🖥️ <span>Connexion</span>
+        </button>
+        <button id="btn-web" class="btn btn-info">
+            🌐 <span>Web</span>
+        </button>
+    </nav>
+
+    <!-- Conteneur Principal -->
+    <main class="main-container">
+        <!-- Barre de recherche et filtres -->
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="🔍 Rechercher un serveur (nom, IP, zone...)" />
+            <select id="filter-os" class="filter-select">
+                <option value="">Tous les OS</option>
+                <option value="Windows">Windows 🪟</option>
+                <option value="Linux">Linux 🐧</option>
+            </select>
+            <select id="filter-zone" class="filter-select">
+                <option value="">Toutes les zones</option>
+                <option value="DMZ">DMZ</option>
+                <option value="DMZ_intern">DMZ Interne</option>
+                <option value="Vlan100">VLAN 100</option>
+                <option value="Vlan10">VLAN 10</option>
+                <option value="Vlan20">VLAN 20</option>
+                <option value="Vlan30">VLAN 30</option>
+            </select>
+        </div>
+
+        <!-- Grille de serveurs -->
+        <div id="servers-grid" class="servers-grid">
+            <!-- Les cartes serveurs seront générées dynamiquement par JS -->
+        </div>
+
+        <!-- Message si aucun serveur -->
+        <div id="empty-state" class="empty-state" style="display: none;">
+            <div class="empty-icon">📭</div>
+            <h3>Aucun serveur trouvé</h3>
+            <p>Cliquez sur "➕ Ajouter" pour créer votre premier serveur</p>
+        </div>
+    </main>
+
+    <!-- Status Bar -->
+    <footer class="status-bar">
+        <span id="status-text">✅ Prêt | <span id="server-count">0</span> serveurs chargés</span>
+        <span id="app-version">v2.3.0</span>
+    </footer>
+
+    <!-- Modal Ajout/Modification Serveur -->
+    <div id="modal-server" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Ajouter un serveur</h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <form id="server-form" class="modal-body">
+                <div class="form-group">
+                    <label for="input-id">ID Serveur</label>
+                    <input type="number" id="input-id" required readonly />
+                </div>
+                <div class="form-group">
+                    <label for="input-name">Nom du serveur</label>
+                    <input type="text" id="input-name" placeholder="Ex: SRV-WEB1" required />
+                </div>
+                <div class="form-group">
+                    <label for="input-ip">Adresse IP</label>
+                    <input type="text" id="input-ip" placeholder="Ex: 192.168.1.100" required pattern="^(\d{1,3}\.){3}\d{1,3}$" />
+                </div>
+                <div class="form-group">
+                    <label for="input-user">Utilisateur</label>
+                    <input type="text" id="input-user" placeholder="Ex: administrateur" required />
+                </div>
+                <div class="form-group">
+                    <label for="input-zone">Zone réseau</label>
+                    <input type="text" id="input-zone" placeholder="Ex: DMZ" required />
+                </div>
+                <div class="form-group">
+                    <label for="input-os">Système d'exploitation</label>
+                    <select id="input-os" required>
+                        <option value="Linux">Linux 🐧</option>
+                        <option value="Windows">Windows 🪟</option>
+                    </select>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btn-cancel">Annuler</button>
+                <button type="submit" form="server-form" class="btn btn-success" id="btn-save">💾 Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Chargement...</p>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "gsb-infrastructure-manager",
+  "version": "2.3.0",
+  "description": "GSB Infrastructure Manager - Application desktop premium pour gestion de serveurs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win"
+  },
+  "keywords": [
+    "infrastructure",
+    "server",
+    "manager",
+    "gsb"
+  ],
+  "author": "GSB",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  }
+}

@@ -1,0 +1,87 @@
+# ===================================
+# Node.js & NPM
+# ===================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ===================================
+# Electron
+# ===================================
+dist/
+build/
+out/
+*.exe
+*.dmg
+*.AppImage
+*.deb
+*.rpm
+
+# ===================================
+# Fichiers temporaires Windows
+# ===================================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ===================================
+# Fichiers temporaires macOS
+# ===================================
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ===================================
+# Fichiers temporaires Linux
+# ===================================
+*~
+.directory
+
+# ===================================
+# Logs & Debug
+# ===================================
+logs/
+*.log
+*.log.*
+
+# ===================================
+# IDE & Editeurs
+# ===================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# ===================================
+# Variables d'environnement
+# ===================================
+.env
+.env.local
+.env.*.local
+
+# ===================================
+# Sauvegardes personnelles
+# (gardez servers.json pour votre config par défaut)
+# ===================================
+*.backup
+*.bak
+servers_*.json
+
+# ===================================
+# Coverage & Tests
+# ===================================
+coverage/
+.nyc_output/
