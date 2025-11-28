@@ -10,7 +10,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     saveServers: (servers) => ipcRenderer.invoke('save-servers', servers),
 
     // Tests de connectivité
+    // Tests de connectivité
     pingServer: (ip) => ipcRenderer.invoke('ping-server', ip),
+    scanNetworkRange: (startIP, endIP) => ipcRenderer.invoke('scan-range', startIP, endIP),
 
     // Connexions
     connectRDP: (ip) => ipcRenderer.invoke('connect-rdp', ip),

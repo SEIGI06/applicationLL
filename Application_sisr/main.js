@@ -90,10 +90,45 @@ ipcMain.handle('save-servers', async (event, servers) => {
 
 // Ping d'un serveur (test de connectivité)
 ipcMain.handle('ping-server', async (event, ip) => {
+    return await pingIP(ip);
+});
+
+// Scan d'une plage d'IPs
+ipcMain.handle('scan-range', async (event, startIP, endIP) => {
     try {
-        // Windows utilise -n pour le nombre de paquets
+        const ips = generateIPRange(startIP, endIP);
+        const results = [];
+        const BATCH_SIZE = 50; // Nombre de pings simultanés
+
+        // Traitement par lots pour ne pas surcharger le système
+        for (let i = 0; i < ips.length; i += BATCH_SIZE) {
+            const batch = ips.slice(i, i + BATCH_SIZE);
+            const promises = batch.map(async (ip) => {
+                const status = await pingIP(ip);
+                if (status.online) {
+                    return { ip, status: 'online' };
+                }
+                return null;
+            });
+
+            const batchResults = await Promise.all(promises);
+            results.push(...batchResults.filter(r => r !== null));
+        }
+
+        return results;
+    } catch (error) {
+        console.error('Erreur scan:', error);
+        return [];
+    }
+});
+
+// Fonction helper pour ping (réutilisée)
+async function pingIP(ip) {
+    try {
+        // Windows utilise -n pour le nombre de paquets, -w pour timeout (ms)
+        // Linux utilise -c pour le nombre de paquets, -W pour timeout (s)
         const command = process.platform === 'win32'
-            ? `ping -n 1 -w 1000 ${ip}`
+            ? `ping -n 1 -w 500 ${ip}`
             : `ping -c 1 -W 1 ${ip}`;
 
         await execAsync(command);
@@ -101,7 +136,27 @@ ipcMain.handle('ping-server', async (event, ip) => {
     } catch (error) {
         return { online: false };
     }
-});
+}
+
+// Générateur de plage IP (Supporte uniquement le dernier octet pour l'instant pour simplifier)
+function generateIPRange(start, end) {
+    const startParts = start.split('.').map(Number);
+    const endParts = end.split('.').map(Number);
+    const ips = [];
+
+    // On suppose que seuls le dernier octet change pour cette version simple
+    // ou on itère simplement si c'est le même sous-réseau
+    if (startParts[0] === endParts[0] && startParts[1] === endParts[1] && startParts[2] === endParts[2]) {
+        for (let i = startParts[3]; i <= endParts[3]; i++) {
+            ips.push(`${startParts[0]}.${startParts[1]}.${startParts[2]}.${i}`);
+        }
+    } else {
+        // Fallback: retourne juste le start et end si trop complexe pour l'instant
+        ips.push(start);
+        if (start !== end) ips.push(end);
+    }
+    return ips;
+}
 
 // Connexion RDP (Remote Desktop) pour Windows
 ipcMain.handle('connect-rdp', async (event, ip) => {

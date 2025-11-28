@@ -755,3 +755,94 @@ body {
     flex-direction: column;
   }
 }
+
+/* Modal Scanner Styles */
+.modal-lg {
+    max-width: 800px;
+    width: 90%;
+}
+
+.scan-controls {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.ip-range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.ip-range-inputs input {
+    width: 200px;
+}
+
+.scan-results-list {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.scan-result-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s;
+}
+
+.scan-result-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.scan-result-item input[type="checkbox"] {
+    margin-right: 1rem;
+    width: 18px;
+    height: 18px;
+}
+
+.scan-result-info {
+    flex: 1;
+    display: flex;
+    gap: 2rem;
+}
+
+.scan-progress {
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.progress-bar-container {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    animation: progressIndeterminate 1.5s infinite linear;
+}
+
+@keyframes progressIndeterminate {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.empty-scan {
+    text-align: center;
+    color: var(--gray);
+    padding: 2rem;
+    font-style: italic;
+}

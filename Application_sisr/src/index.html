@@ -126,6 +126,48 @@
         </div>
     </div>
 
+    <!-- Modal Scanner Réseau -->
+    <div id="modal-scan" class="modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>📡 Scanner Réseau</h2>
+                <button class="modal-close" id="modal-close-scan">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="scan-controls">
+                    <div class="form-group">
+                        <label>Plage IP à scanner</label>
+                        <div class="ip-range-inputs">
+                            <input type="text" id="scan-start-ip" placeholder="Début (ex: 192.168.1.1)" value="192.168.1.1">
+                            <span>à</span>
+                            <input type="text" id="scan-end-ip" placeholder="Fin (ex: 192.168.1.254)" value="192.168.1.50">
+                        </div>
+                    </div>
+                    <button id="btn-start-scan" class="btn btn-accent">🚀 Lancer le Scan</button>
+                </div>
+
+                <div id="scan-progress" class="scan-progress" style="display: none;">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill"></div>
+                    </div>
+                    <p>Scan en cours... Veuillez patienter.</p>
+                </div>
+
+                <div class="scan-results-container">
+                    <h3>Résultats (<span id="scan-count">0</span> trouvés)</h3>
+                    <div id="scan-results-list" class="scan-results-list">
+                        <!-- Résultats ici -->
+                        <div class="empty-scan">Lancez un scan pour détecter les machines</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btn-cancel-scan">Fermer</button>
+                <button type="button" class="btn btn-success" id="btn-add-scan-selection" disabled>➕ Ajouter la sélection</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notifications Container -->
     <div id="toast-container" class="toast-container"></div>
 

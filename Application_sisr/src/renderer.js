@@ -429,6 +429,121 @@ function updateStatusBar() {
     document.getElementById('status-text').innerHTML = `✅ Prêt | <span id="server-count">${servers.length}</span> serveurs chargés`;
 }
 
+// ==================== NETWORK SCANNER ====================
+let scanResults = [];
+
+function openScanModal() {
+    document.getElementById('modal-scan').classList.add('active');
+    // Reset
+    scanResults = [];
+    renderScanResults();
+    document.getElementById('scan-progress').style.display = 'none';
+    document.getElementById('btn-start-scan').disabled = false;
+}
+
+function closeScanModal() {
+    document.getElementById('modal-scan').classList.remove('active');
+}
+
+async function startNetworkScan() {
+    const startIP = document.getElementById('scan-start-ip').value;
+    const endIP = document.getElementById('scan-end-ip').value;
+
+    if (!startIP || !endIP) {
+        showToast('warning', '⚠️ Veuillez définir une plage IP');
+        return;
+    }
+
+    // UI Updates
+    document.getElementById('btn-start-scan').disabled = true;
+    document.getElementById('scan-progress').style.display = 'block';
+    document.getElementById('scan-results-list').innerHTML = '<div class="empty-scan">Scan en cours...</div>';
+
+    try {
+        const results = await window.electronAPI.scanNetworkRange(startIP, endIP);
+        scanResults = results;
+        renderScanResults();
+        showToast('success', `✅ Scan terminé: ${results.length} machines trouvées`);
+    } catch (error) {
+        console.error('Erreur scan:', error);
+        showToast('error', '❌ Erreur lors du scan');
+    } finally {
+        document.getElementById('btn-start-scan').disabled = false;
+        document.getElementById('scan-progress').style.display = 'none';
+    }
+}
+
+function renderScanResults() {
+    const list = document.getElementById('scan-results-list');
+    const countSpan = document.getElementById('scan-count');
+    const btnAdd = document.getElementById('btn-add-scan-selection');
+
+    countSpan.textContent = scanResults.length;
+    list.innerHTML = '';
+
+    if (scanResults.length === 0) {
+        list.innerHTML = '<div class="empty-scan">Aucune machine détectée</div>';
+        btnAdd.disabled = true;
+        return;
+    }
+
+    btnAdd.disabled = false;
+
+    scanResults.forEach((result, index) => {
+        const item = document.createElement('div');
+        item.className = 'scan-result-item';
+        item.innerHTML = `
+            <input type="checkbox" id="scan-check-${index}" value="${result.ip}" checked>
+            <div class="scan-result-info">
+                <span><strong>IP:</strong> ${result.ip}</span>
+                <span class="status-badge online">● EN LIGNE</span>
+            </div>
+        `;
+        list.appendChild(item);
+    });
+}
+
+async function addSelectedScanResults() {
+    const checkboxes = document.querySelectorAll('.scan-result-item input[type="checkbox"]:checked');
+    if (checkboxes.length === 0) {
+        showToast('warning', '⚠️ Aucune machine sélectionnée');
+        return;
+    }
+
+    let addedCount = 0;
+    const nextID = servers.length > 0 ? Math.max(...servers.map(s => s.ID)) + 1 : 1;
+
+    for (let i = 0; i < checkboxes.length; i++) {
+        const ip = checkboxes[i].value;
+
+        // Vérifier si existe déjà
+        if (servers.some(s => s.IP === ip)) continue;
+
+        const newServer = {
+            ID: nextID + addedCount,
+            Name: `New Server (${ip})`,
+            IP: ip,
+            User: 'admin',
+            Zone: 'LAN', // Zone par défaut
+            OS: 'Linux', // OS par défaut (impossible à deviner sans scan de ports avancé)
+            Color: 'White'
+        };
+
+        servers.push(newServer);
+        addedCount++;
+    }
+
+    if (addedCount > 0) {
+        await saveServers();
+        renderServers();
+        updateStatusBar();
+        closeScanModal();
+        showToast('success', `➕ ${addedCount} serveurs ajoutés avec succès !`);
+    } else {
+        showToast('info', 'ℹ️ Ces serveurs existent déjà');
+    }
+}
+
 // ==================== EVENT LISTENERS ====================
 function initializeEventListeners() {
     // Délégation d'événements pour la grille de serveurs
@@ -453,7 +568,8 @@ function initializeEventListeners() {
         }
     });
 
-    document.getElementById('btn-scan').addEventListener('click', scanNetwork);
+    // SCANNER BUTTON (Toolbar)
+    document.getElementById('btn-scan').addEventListener('click', openScanModal);
 
     document.getElementById('btn-connect').addEventListener('click', () => {
         const server = getSelectedServer();
@@ -473,15 +589,20 @@ function initializeEventListeners() {
         }
     });
 
-    // Modal
+    // Modal Server
     document.getElementById('modal-close').addEventListener('click', closeModal);
     document.getElementById('btn-cancel').addEventListener('click', closeModal);
 
-    // Fermer modal en cliquant en dehors
-    document.getElementById('modal-server').addEventListener('click', (e) => {
-        if (e.target.id === 'modal-server') {
-            closeModal();
-        }
+    // Modal Scanner
+    document.getElementById('modal-close-scan').addEventListener('click', closeScanModal);
+    document.getElementById('btn-cancel-scan').addEventListener('click', closeScanModal);
+    document.getElementById('btn-start-scan').addEventListener('click', startNetworkScan);
+    document.getElementById('btn-add-scan-selection').addEventListener('click', addSelectedScanResults);
+
+    // Fermer modals en cliquant en dehors
+    window.addEventListener('click', (e) => {
+        if (e.target.id === 'modal-server') closeModal();
+        if (e.target.id === 'modal-scan') closeScanModal();
     });
 
     // Formulaire
@@ -499,6 +620,7 @@ function initializeEventListeners() {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeModal();
+            closeScanModal();
         }
     });
 }
