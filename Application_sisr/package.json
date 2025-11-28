@@ -3,6 +3,10 @@
   "version": "2.3.0",
   "description": "GSB Infrastructure Manager - Application desktop premium pour gestion de serveurs",
   "main": "main.js",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/SEIGI06/applicationLL.git"
+},
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
