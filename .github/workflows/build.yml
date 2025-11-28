@@ -35,3 +35,10 @@ jobs:
         with:
           name: GSB-Manager-Installer
           path: Application_sisr/dist/*.exe
+          
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Application_sisr/dist/*.exe
+
+          
