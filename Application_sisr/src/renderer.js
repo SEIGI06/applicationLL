@@ -72,12 +72,18 @@ function renderServers() {
 
     grid.style.display = 'grid';
     emptyState.style.display = 'none';
-    grid.innerHTML = '';
+
+    // Optimisation: Utilisation de DocumentFragment pour réduire les reflows
+    const fragment = document.createDocumentFragment();
 
     filtered.forEach(server => {
         const card = createServerCard(server);
-        grid.appendChild(card);
+        fragment.appendChild(card);
     });
+
+    // Nettoyage et insertion unique
+    grid.innerHTML = '';
+    grid.appendChild(fragment);
 }
 
 function createServerCard(server) {
@@ -85,12 +91,18 @@ function createServerCard(server) {
     card.className = 'server-card';
     card.dataset.id = server.ID;
 
+    // Ajout de la classe selected si nécessaire
+    if (selectedServerId === server.ID) {
+        card.classList.add('selected');
+    }
+
     // Icône selon l'OS
     const osIcon = server.OS === 'Windows' ? '🪟' : '🐧';
 
     // Badge de zone avec couleur
     const zoneClass = getZoneClass(server.Zone);
 
+    // Construction du HTML sans event listeners individuels (Event Delegation)
     card.innerHTML = `
     <div class="card-header">
       <span class="os-icon">${osIcon}</span>
@@ -105,51 +117,58 @@ function createServerCard(server) {
       <p><strong>OS:</strong> <span>${server.OS}</span></p>
     </div>
     <div class="card-actions">
-      <button class="btn btn-success btn-connect" title="Connexion RDP/SSH">
+      <button class="btn btn-success btn-connect" title="Connexion RDP/SSH" data-action="connect">
         🖥️
       </button>
-      <button class="btn btn-info btn-web" title="Ouvrir dans navigateur">
+      <button class="btn btn-info btn-web" title="Ouvrir dans navigateur" data-action="web">
         🌐
       </button>
-      <button class="btn btn-secondary btn-edit" title="Modifier">
+      <button class="btn btn-secondary btn-edit" title="Modifier" data-action="edit">
         ✏️
       </button>
-      <button class="btn btn-danger btn-delete" title="Supprimer">
+      <button class="btn btn-danger btn-delete" title="Supprimer" data-action="delete">
         🗑️
       </button>
     </div>
   `;
 
-    // Event listeners sur la carte
-    card.addEventListener('click', (e) => {
-        // Ne pas sélectionner si on clique sur un bouton
-        if (!e.target.closest('button')) {
-            selectServer(server.ID);
-        }
-    });
-
-    // Event listeners sur les boutons
-    card.querySelector('.btn-connect').addEventListener('click', (e) => {
-        e.stopPropagation();
-        connectToServer(server);
-    });
-
-    card.querySelector('.btn-web').addEventListener('click', (e) => {
-        e.stopPropagation();
-        openWebInterface(server);
-    });
-
-    card.querySelector('.btn-edit').addEventListener('click', (e) => {
-        e.stopPropagation();
-        editServer(server.ID);
-    });
-
-    card.querySelector('.btn-delete').addEventListener('click', (e) => {
-        e.stopPropagation();
-        deleteServer(server.ID);
-    });
-
     return card;
+}
+
+// Gestionnaire d'événements délégué pour la grille
+function handleGridClick(e) {
+    const card = e.target.closest('.server-card');
+    if (!card) return;
+
+    const serverId = parseInt(card.dataset.id);
+    const server = servers.find(s => s.ID === serverId);
+
+    if (!server) return;
+
+    // Vérifier si un bouton a été cliqué
+    const button = e.target.closest('button');
+    if (button) {
+        e.stopPropagation();
+        const action = button.dataset.action;
+
+        switch (action) {
+            case 'connect':
+                connectToServer(server);
+                break;
+            case 'web':
+                openWebInterface(server);
+                break;
+            case 'edit':
+                editServer(serverId);
+                break;
+            case 'delete':
+                deleteServer(serverId);
+                break;
+        }
+    } else {
+        // Clic sur la carte elle-même -> Sélection
+        selectServer(serverId);
+    }
 }
 
 function getZoneClass(zone) {
@@ -412,6 +431,9 @@ function updateStatusBar() {
 
 // ==================== EVENT LISTENERS ====================
 function initializeEventListeners() {
+    // Délégation d'événements pour la grille de serveurs
+    document.getElementById('servers-grid').addEventListener('click', handleGridClick);
+
     // Boutons toolbar
     document.getElementById('btn-add').addEventListener('click', addServer);
 
